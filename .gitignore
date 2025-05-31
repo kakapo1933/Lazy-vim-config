@@ -1,0 +1,46 @@
+# LazyVim lock file
+lazy-lock.json
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Plugin data and cache
+plugin/
+.repro/
+data/
+
+# LSP logs
+lsp.log
+
+# Backup files
+*.bak
+
+# Test files
+tt.*
+.tests
+doc/tags
+debug
+foo.*
+test_*.lua
+test_*.py
+
+# Temporary directories
+/tmp/
+
+# Don't track the separate plugin directory we created
+claude-nvim.nvim/
