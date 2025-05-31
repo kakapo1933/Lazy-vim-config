@@ -3,14 +3,18 @@
 
 local M = {}
 
--- Store active Claude terminals
-local claude_terminals = {}
+-- Store active Claude terminals globally to persist across function calls
+if not _G.claude_terminals then
+  _G.claude_terminals = {}
+end
+local claude_terminals = _G.claude_terminals
 
 -- Function to track Claude terminals
 local function track_claude_terminal(buf, prompt)
   claude_terminals[buf] = {
     prompt = prompt,
-    created_at = os.time()
+    created_at = os.time(),
+    pid = vim.api.nvim_buf_get_var(buf, "terminal_job_pid") or "unknown"
   }
 end
 
@@ -53,19 +57,28 @@ function M.create_claude_terminal(command, prompt)
   vim.api.nvim_buf_set_keymap(buf, 't', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
   
   -- Start terminal in the buffer
-  vim.fn.termopen(command, {
+  local job_id = vim.fn.termopen(command, {
     on_exit = function(_, exit_code)
       if exit_code == 0 then
-        -- Add instruction at the end
-        vim.api.nvim_buf_set_lines(buf, -1, -1, false, {'', '--- Press q or Esc to close ---'})
+        -- Add instruction at the end (check if buffer is still modifiable)
+        pcall(function()
+          vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+          vim.api.nvim_buf_set_lines(buf, -1, -1, false, {'', '--- Press q or Esc to close ---'})
+          vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+        end)
       end
       -- Remove from tracking when terminal exits
       claude_terminals[buf] = nil
     end
   })
   
-  -- Track this terminal
-  track_claude_terminal(buf, prompt)
+  -- Track this terminal with job ID
+  claude_terminals[buf] = {
+    prompt = prompt,
+    created_at = os.time(),
+    job_id = job_id,
+    pid = vim.fn.jobpid(job_id)
+  }
   
   -- Enter insert mode to show live output
   vim.cmd('startinsert')
@@ -82,8 +95,9 @@ function M.send_to_claude(prompt)
     vim.cmd('normal! "vy')
     local selection = vim.fn.getreg('v')
 
-    -- Write selection to temporary file
-    local temp_file = "/tmp/nvim_claude_selection.txt"
+    -- Create unique temporary file for this session
+    local session_id = os.time() .. "_" .. math.random(1000, 9999)
+    local temp_file = string.format("/tmp/nvim_claude_%s.txt", session_id)
     local file = io.open(temp_file, "w")
     if file then
       file:write(selection)
@@ -142,7 +156,8 @@ function M.setup()
     if not check_claude_cli() then return end
     
     local selection = vim.fn.getline(".")
-    local temp_file = "/tmp/nvim_claude_line.txt"
+    local session_id = os.time() .. "_" .. math.random(1000, 9999)
+    local temp_file = string.format("/tmp/nvim_claude_line_%s.txt", session_id)
     local file = io.open(temp_file, "w")
     if file then
       file:write(selection)
@@ -170,7 +185,8 @@ function M.setup()
     
     local error_msg = vim.fn.input("Paste error message: ")
     if error_msg ~= "" then
-      local temp_file = "/tmp/nvim_claude_error.txt"
+      local session_id = os.time() .. "_" .. math.random(1000, 9999)
+      local temp_file = string.format("/tmp/nvim_claude_error_%s.txt", session_id)
       local file = io.open(temp_file, "w")
       if file then
         file:write(error_msg)
@@ -186,60 +202,93 @@ function M.setup()
   vim.api.nvim_create_user_command("ClaudeList", function()
     local active_terminals = {}
     
-    -- Debug: Show total tracked terminals
-    local total_tracked = 0
-    for _ in pairs(claude_terminals) do
-      total_tracked = total_tracked + 1
-    end
-    print(string.format("Debug: %d terminals tracked", total_tracked))
-    
     for buf, info in pairs(claude_terminals) do
-      print(string.format("Debug: Buffer %d, valid: %s, prompt: %s", buf, tostring(vim.api.nvim_buf_is_valid(buf)), info.prompt))
-      if vim.api.nvim_buf_is_valid(buf) then
+      local is_valid = vim.api.nvim_buf_is_valid(buf)
+      local job_running = info.job_id and vim.fn.jobwait({info.job_id}, 0)[1] == -1
+      
+      if is_valid and job_running then
         table.insert(active_terminals, {
           buf = buf,
           prompt = info.prompt,
-          age = os.time() - info.created_at
+          age = os.time() - info.created_at,
+          pid = info.pid,
+          job_id = info.job_id
         })
       else
-        claude_terminals[buf] = nil  -- Clean up invalid buffers
+        claude_terminals[buf] = nil  -- Clean up invalid or finished terminals
       end
     end
     
     if #active_terminals == 0 then
-      print("No active Claude terminals found")
+      vim.notify("No active Claude terminals found", vim.log.levels.INFO)
       return
     end
     
-    print("Active Claude terminals:")
+    -- Create a floating window to display the list
+    local buf = vim.api.nvim_create_buf(false, true)
+    
+    -- Build content for the buffer
+    local content = {}
+    table.insert(content, "Active Claude Terminals (" .. #active_terminals .. ")")
+    table.insert(content, string.rep("=", 50))
+    table.insert(content, "")
+    
     for i, term in ipairs(active_terminals) do
       local age_str = string.format("%dm%ds", math.floor(term.age / 60), term.age % 60)
-      print(string.format("%d. %s (running for %s)", i, term.prompt, age_str))
+      table.insert(content, string.format("%d. %s (running for %s)", i, term.prompt, age_str))
     end
     
-    local choice = vim.fn.input("Enter number to reconnect (or press Enter to cancel): ")
-    if choice ~= "" and tonumber(choice) then
-      local selected = active_terminals[tonumber(choice)]
-      if selected then
+    table.insert(content, "")
+    table.insert(content, "Press number to select, or Esc to cancel")
+    
+    -- Set buffer content
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+    
+    -- Create floating window
+    local width = math.floor(vim.o.columns * 0.6)
+    local height = #content + 2
+    local row = math.floor((vim.o.lines - height) / 2)
+    local col = math.floor((vim.o.columns - width) / 2)
+    
+    local opts = {
+      relative = 'editor',
+      width = width,
+      height = height,
+      row = row,
+      col = col,
+      style = 'minimal',
+      border = 'rounded',
+      title = ' Claude Terminals ',
+      title_pos = 'center'
+    }
+    
+    local win = vim.api.nvim_open_win(buf, true, opts)
+    
+    -- Set up key mappings for selection
+    local function close_and_select(choice_num)
+      vim.api.nvim_win_close(win, true)
+      if choice_num and active_terminals[choice_num] then
+        local selected = active_terminals[choice_num]
         -- Create new floating window for existing terminal
-        local width = math.floor(vim.o.columns * 0.8)
-        local height = math.floor(vim.o.lines * 0.8)
-        local row = math.floor((vim.o.lines - height) / 2)
-        local col = math.floor((vim.o.columns - width) / 2)
+        local term_width = math.floor(vim.o.columns * 0.8)
+        local term_height = math.floor(vim.o.lines * 0.8)
+        local term_row = math.floor((vim.o.lines - term_height) / 2)
+        local term_col = math.floor((vim.o.columns - term_width) / 2)
 
-        local opts = {
+        local term_opts = {
           relative = 'editor',
-          width = width,
-          height = height,
-          row = row,
-          col = col,
+          width = term_width,
+          height = term_height,
+          row = term_row,
+          col = term_col,
           style = 'minimal',
           border = 'rounded',
           title = ' Claude Processing: ' .. selected.prompt .. ' ',
           title_pos = 'center'
         }
 
-        local win = vim.api.nvim_open_win(selected.buf, true, opts)
+        local term_win = vim.api.nvim_open_win(selected.buf, true, term_opts)
         
         -- Set up keymaps for the reconnected window
         vim.api.nvim_buf_set_keymap(selected.buf, 'n', 'q', '<cmd>close<cr>', { noremap = true, silent = true })
@@ -247,6 +296,26 @@ function M.setup()
         vim.api.nvim_buf_set_keymap(selected.buf, 't', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
       end
     end
+    
+    -- Set up key mappings
+    for i = 1, #active_terminals do
+      vim.api.nvim_buf_set_keymap(buf, 'n', tostring(i), '', {
+        noremap = true,
+        silent = true,
+        callback = function() close_and_select(i) end
+      })
+    end
+    
+    vim.api.nvim_buf_set_keymap(buf, 'n', '<Esc>', '', {
+      noremap = true,
+      silent = true,
+      callback = function() vim.api.nvim_win_close(win, true) end
+    })
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '', {
+      noremap = true,
+      silent = true,
+      callback = function() vim.api.nvim_win_close(win, true) end
+    })
   end, { desc = "List and reconnect to Claude terminals" })
 
   -- Command to kill all Claude terminals
@@ -264,6 +333,52 @@ function M.setup()
 
   -- Add keymapping for quick access
   keymap("v", "<leader>cl", "<cmd>ClaudeList<cr>", { desc = "Claude: List terminals" })
+
+  -- Command to show terminals without reconnection prompt
+  vim.api.nvim_create_user_command("ClaudeShow", function()
+    local active_terminals = {}
+    
+    for buf, info in pairs(claude_terminals) do
+      local is_valid = vim.api.nvim_buf_is_valid(buf)
+      local job_running = info.job_id and vim.fn.jobwait({info.job_id}, 0)[1] == -1
+      
+      if is_valid and job_running then
+        table.insert(active_terminals, {
+          buf = buf,
+          prompt = info.prompt,
+          age = os.time() - info.created_at,
+          pid = info.pid,
+          job_id = info.job_id
+        })
+      else
+        claude_terminals[buf] = nil
+      end
+    end
+    
+    if #active_terminals == 0 then
+      print("No active Claude terminals found")
+      return
+    end
+    
+    print(string.format("\n=== Active Claude Terminals (%d) ===", #active_terminals))
+    for i, term in ipairs(active_terminals) do
+      local age_str = string.format("%dm%ds", math.floor(term.age / 60), term.age % 60)
+      print(string.format("%d. %s (running for %s)", i, term.prompt, age_str))
+    end
+    print("======================================")
+  end, { desc = "Show active Claude terminals" })
+
+  -- Debug command to check global state
+  vim.api.nvim_create_user_command("ClaudeDebugState", function()
+    print("DEBUG: Global claude_terminals state:")
+    local count = 0
+    for buf, info in pairs(_G.claude_terminals) do
+      count = count + 1
+      print(string.format("  buf=%d: prompt='%s', pid=%s, created=%s", 
+        buf, info.prompt, tostring(info.pid), os.date("%H:%M:%S", info.created_at)))
+    end
+    print(string.format("Total: %d terminals in global state", count))
+  end, { desc = "Debug Claude terminal global state" })
 end
 
 return M
