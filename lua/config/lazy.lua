@@ -52,5 +52,3 @@ require("lazy").setup({
   },
 })
 
--- Load Claude Neovim Integration Plugin
-require("plugins.claude-nvim").setup()
