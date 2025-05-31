@@ -334,6 +334,81 @@ function M.setup()
   -- Add keymapping for quick access
   keymap("v", "<leader>cl", "<cmd>ClaudeList<cr>", { desc = "Claude: List terminals" })
 
+  -- Command for custom Claude prompts
+  vim.api.nvim_create_user_command("ClaudeAsk", function(opts)
+    if not check_claude_cli() then return end
+    
+    local prompt = opts.args
+    if prompt == "" then
+      prompt = vim.fn.input("Claude prompt: ")
+      if prompt == "" then
+        vim.notify("No prompt provided", vim.log.levels.WARN)
+        return
+      end
+    end
+    
+    -- Check if we're in visual mode or have a selection
+    local mode = vim.fn.mode()
+    local has_selection = false
+    local content = ""
+    
+    if mode == "v" or mode == "V" or mode == "\22" then
+      -- Visual mode - get selection
+      vim.cmd('normal! "vy')
+      content = vim.fn.getreg('v')
+      has_selection = true
+    else
+      -- Normal mode - get current buffer content
+      local filename = vim.fn.expand("%")
+      if filename ~= "" and vim.fn.filereadable(filename) == 1 then
+        content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+      else
+        content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+      end
+    end
+    
+    -- Create temporary file with content
+    local session_id = os.time() .. "_" .. math.random(1000, 9999)
+    local temp_file = string.format("/tmp/nvim_claude_custom_%s.txt", session_id)
+    local file = io.open(temp_file, "w")
+    if file then
+      file:write(content)
+      file:close()
+      
+      local command = string.format('echo "%s:" | cat - %s | claude', prompt, temp_file)
+      local display_prompt = has_selection and (prompt .. " (selection)") or (prompt .. " (buffer)")
+      M.create_claude_terminal(command, display_prompt)
+    else
+      vim.notify("Error: Could not create temporary file", vim.log.levels.ERROR)
+    end
+  end, { 
+    nargs = "*",
+    desc = "Send custom prompt to Claude with current buffer or selection",
+    complete = function(ArgLead, CmdLine, CursorPos)
+      -- Provide some common prompt suggestions
+      local suggestions = {
+        "Explain this code",
+        "Review this code for bugs and improvements", 
+        "Optimize this code",
+        "Refactor this code to be more readable",
+        "Write unit tests for this code",
+        "Add comprehensive comments to this code",
+        "Debug this code",
+        "What does this code do?",
+        "How can I improve this code?",
+        "Find potential security issues in this code"
+      }
+      
+      local matches = {}
+      for _, suggestion in ipairs(suggestions) do
+        if suggestion:lower():find(ArgLead:lower(), 1, true) then
+          table.insert(matches, suggestion)
+        end
+      end
+      return matches
+    end
+  })
+
   -- Command to show terminals without reconnection prompt
   vim.api.nvim_create_user_command("ClaudeShow", function()
     local active_terminals = {}
