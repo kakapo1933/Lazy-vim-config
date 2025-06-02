@@ -256,65 +256,9 @@ return {
       desc = "Create branch",
     },
     {
-      "<leader>glg",
-      function()
-        -- Create a git log with graph in a floating terminal
-        local width = math.floor(vim.o.columns * 0.9)
-        local height = math.floor(vim.o.lines * 0.8)
-        local row = math.floor((vim.o.lines - height) / 2)
-        local col = math.floor((vim.o.columns - width) / 2)
-
-        local buf = vim.api.nvim_create_buf(false, true)
-        
-        local win = vim.api.nvim_open_win(buf, true, {
-          relative = "editor",
-          width = width,
-          height = height,
-          row = row,
-          col = col,
-          style = "minimal",
-          border = "rounded",
-          title = " Git Log Graph ",
-          title_pos = "center",
-        })
-
-        -- Set buffer options
-        vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-        vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
-        vim.api.nvim_buf_set_option(buf, "swapfile", false)
-
-        -- Git log command with graph and colors
-        local cmd = "git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(green)(%cr)%C(reset) %s %C(bold blue)<%an>%C(reset)%C(red)%d%C(reset)' --abbrev-commit --all"
-        
-        -- Open terminal with git log
-        vim.fn.termopen(cmd, {
-          on_exit = function()
-            -- Close window when git log exits
-            if vim.api.nvim_win_is_valid(win) then
-              vim.api.nvim_win_close(win, true)
-            end
-          end
-        })
-
-        -- Key mappings for the floating window
-        local opts = { buffer = buf, noremap = true, silent = true }
-        vim.keymap.set('n', 'q', function()
-          if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_close(win, true)
-          end
-        end, opts)
-        vim.keymap.set('n', '<Esc>', function()
-          if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_close(win, true)
-          end
-        end, opts)
-      end,
-      desc = "Git log graph",
-    },
-    {
       "<leader>glo",
       function()
-        -- Git log oneline in floating window
+        -- Git log oneline in floating terminal
         local width = math.floor(vim.o.columns * 0.9)
         local height = math.floor(vim.o.lines * 0.8)
         local row = math.floor((vim.o.lines - height) / 2)
@@ -337,16 +281,74 @@ return {
         vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
         vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
         vim.api.nvim_buf_set_option(buf, "swapfile", false)
+        vim.api.nvim_buf_set_option(buf, "modifiable", false)
+        vim.api.nvim_buf_set_option(buf, "filetype", "git")
 
-        local cmd = "git log --oneline --decorate --graph -20"
-        
-        vim.fn.termopen(cmd, {
-          on_exit = function()
-            if vim.api.nvim_win_is_valid(win) then
-              vim.api.nvim_win_close(win, true)
+        -- Get clean git log output for syntax highlighting
+        local cmd = "git log --oneline --decorate --graph"
+        local handle = io.popen(cmd)
+        if handle then
+          local lines = {}
+          for line in handle:lines() do
+            table.insert(lines, line)
+          end
+          handle:close()
+          
+          vim.api.nvim_buf_set_option(buf, "modifiable", true)
+          vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+          vim.api.nvim_buf_set_option(buf, "modifiable", false)
+          
+          -- Add comprehensive git highlighting
+          vim.cmd([[
+            highlight GitGraphRed ctermfg=1 guifg=#ff6b6b
+            highlight GitGraphGreen ctermfg=2 guifg=#51cf66
+            highlight GitGraphYellow ctermfg=3 guifg=#ffd43b
+            highlight GitGraphBlue ctermfg=4 guifg=#74c0fc
+            highlight GitGraphMagenta ctermfg=5 guifg=#d0bfff
+            highlight GitGraphCyan ctermfg=6 guifg=#66d9ef
+            highlight GitCommitHash ctermfg=11 guifg=#ffd43b gui=bold
+            highlight GitBranch ctermfg=10 guifg=#51cf66 gui=bold
+            highlight GitRemote ctermfg=9 guifg=#ff8787 gui=bold
+            highlight GitTag ctermfg=13 guifg=#d0bfff gui=bold
+          ]])
+          
+          local ns = vim.api.nvim_create_namespace('git_enhanced_colors')
+          local graph_colors = {'GitGraphRed', 'GitGraphGreen', 'GitGraphYellow', 'GitGraphBlue', 'GitGraphMagenta', 'GitGraphCyan'}
+          
+          for i, line in ipairs(lines) do
+            -- Color git graph characters
+            local col = 0
+            for char in line:gmatch('.') do
+              if char:match('[|\\\\/*]') then
+                local color_idx = (math.floor(col / 2) % #graph_colors) + 1
+                vim.api.nvim_buf_add_highlight(buf, ns, graph_colors[color_idx], i-1, col, col+1)
+              end
+              col = col + 1
+            end
+            
+            -- Color commit hashes (7-8 character hex at start after graph)
+            local hash_start, hash_end = line:find('[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]?')
+            if hash_start then
+              vim.api.nvim_buf_add_highlight(buf, ns, 'GitCommitHash', i-1, hash_start-1, hash_end)
+            end
+            
+            -- Color branch/tag references in parentheses
+            local start_paren = line:find('%(')
+            if start_paren then
+              local end_paren = line:find('%)', start_paren)
+              if end_paren then
+                local content = line:sub(start_paren + 1, end_paren - 1)
+                if content:match('origin/') then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitRemote', i-1, start_paren-1, end_paren)
+                elseif content:match('tag:') then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitTag', i-1, start_paren-1, end_paren)
+                elseif content ~= '' then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitBranch', i-1, start_paren-1, end_paren)
+                end
+              end
             end
           end
-        })
+        end
 
         local opts = { buffer = buf, noremap = true, silent = true }
         vim.keymap.set('n', 'q', function()
@@ -385,19 +387,61 @@ return {
           title_pos = "center",
         })
 
+        -- Set buffer options for scrollable buffer
         vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
         vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
         vim.api.nvim_buf_set_option(buf, "swapfile", false)
+        vim.api.nvim_buf_set_option(buf, "modifiable", false)
+        vim.api.nvim_buf_set_option(buf, "filetype", "git")
 
-        local cmd = "git log --stat --pretty=format:'%C(yellow)%h%C(reset) - %C(green)(%cr)%C(reset) %s %C(bold blue)<%an>%C(reset)' -10"
-        
-        vim.fn.termopen(cmd, {
-          on_exit = function()
-            if vim.api.nvim_win_is_valid(win) then
-              vim.api.nvim_win_close(win, true)
+        -- Get clean git log output for syntax highlighting
+        local cmd = "git log --stat --pretty=format:'%h - (%cr) %s <%an>%d'"
+        local handle = io.popen(cmd)
+        if handle then
+          local lines = {}
+          for line in handle:lines() do
+            table.insert(lines, line)
+          end
+          handle:close()
+          
+          vim.api.nvim_buf_set_option(buf, "modifiable", true)
+          vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+          vim.api.nvim_buf_set_option(buf, "modifiable", false)
+          
+          -- Add basic git highlighting
+          vim.cmd([[
+            highlight GitCommitHash ctermfg=11 guifg=#ffd43b gui=bold
+            highlight GitBranch ctermfg=10 guifg=#51cf66 gui=bold
+            highlight GitRemote ctermfg=9 guifg=#ff8787 gui=bold
+            highlight GitTag ctermfg=13 guifg=#d0bfff gui=bold
+          ]])
+          
+          local ns = vim.api.nvim_create_namespace('git_stats_colors')
+          
+          for i, line in ipairs(lines) do
+            -- Color commit hashes
+            local hash_start, hash_end = line:find('[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]?')
+            if hash_start then
+              vim.api.nvim_buf_add_highlight(buf, ns, 'GitCommitHash', i-1, hash_start-1, hash_end)
+            end
+            
+            -- Color branch/tag references
+            local start_paren = line:find('%(')
+            if start_paren then
+              local end_paren = line:find('%)', start_paren)
+              if end_paren then
+                local content = line:sub(start_paren + 1, end_paren - 1)
+                if content:match('origin/') then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitRemote', i-1, start_paren-1, end_paren)
+                elseif content:match('tag:') then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitTag', i-1, start_paren-1, end_paren)
+                elseif content ~= '' then
+                  vim.api.nvim_buf_add_highlight(buf, ns, 'GitBranch', i-1, start_paren-1, end_paren)
+                end
+              end
             end
           end
-        })
+        end
 
         local opts = { buffer = buf, noremap = true, silent = true }
         vim.keymap.set('n', 'q', function()
