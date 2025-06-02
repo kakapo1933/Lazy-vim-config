@@ -16,11 +16,6 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 - Lazy loading for optimal performance
 - Custom plugin configurations
 
-### 🔧 Git Worktree Management
-- Advanced git worktree operations for efficient branch management
-- Enhanced git log visualization with syntax highlighting
-- Branch creation and switching with telescope integration
-- Floating terminal windows for git operations
 
 ## Installation
 
@@ -50,18 +45,6 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 > **Note:** This configuration uses the remote plugin [kaipo-claude-code.nvim](https://github.com/kakapo1933/kaipo-claude-code.nvim). 
 > For the latest commands and documentation, refer to the plugin repository.
 
-## Git Worktree Commands
-
-| Command | Description |
-|---------|-------------|
-| `<leader>gwl` | List all git worktrees |
-| `<leader>gwc` | Create new git worktree |
-| `<leader>gws` | Switch to existing worktree |
-| `<leader>gwd` | Delete git worktree |
-| `<leader>gwp` | Prune stale worktree references |
-| `<leader>glo` | Enhanced git log with syntax highlighting |
-| `<leader>gls` | Git log with file statistics |
-| `<leader>gbc` | Create new branch with telescope |
 
 ## Key Features
 
@@ -97,7 +80,6 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 │       ├── claude.lua      # Claude AI integration plugin
 │       ├── dashboard.lua   # Dashboard configuration
 │       ├── example.lua     # Example plugin configuration
-│       ├── kaipo-git.lua   # Git worktree and branch management
 │       └── tailwind.lua    # Tailwind CSS support
 ├── stylua.toml             # Lua formatter configuration
 ├── lazyvim.json            # LazyVim configuration
