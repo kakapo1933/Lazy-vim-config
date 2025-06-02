@@ -1,0 +1,12 @@
+{
+    "diagnostics.disable": [
+        "deprecated"
+    ],
+    "diagnostics.globals": [
+        "vim"
+    ],
+    "workspace.library": [
+        "/opt/homebrew/share/nvim/runtime/lua",
+        "/Users/kaipochen/.local/share/nvim/lazy/lazy.nvim/lua"
+    ]
+}

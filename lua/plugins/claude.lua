@@ -1,16 +1,18 @@
--- Claude AI Integration - Load directly without LazyVim plugin spec
--- This runs the setup immediately since it's a local configuration
-
-local function setup_claude()
-  -- Only setup if not already done
-  if not _G.claude_setup_done then
+-- Claude Code Integration from GitHub
+return {
+  "kakapo1933/kaipo-claude-code.nvim",
+  config = function()
     require("claude").setup()
-    _G.claude_setup_done = true
-  end
-end
+  end,
+}
 
--- Setup Claude integration
-setup_claude()
-
--- Return empty table to satisfy LazyVim's plugin loading
-return {}
+-- Commented out local development version
+--[[
+return {
+  dir = "/Users/kaipochen/Desktop/Home/kaipo-claude-code.nvim",
+  name = "kaipo-claude-code.nvim",
+  config = function()
+    require("claude").setup()
+  end,
+}
+--]]

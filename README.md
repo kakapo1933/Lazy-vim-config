@@ -5,6 +5,7 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 ## Features
 
 ### 🤖 Claude AI Integration
+- Remote plugin: [kaipo-claude-code.nvim](https://github.com/kakapo1933/kaipo-claude-code.nvim)
 - Real-time Claude AI interactions through floating terminal windows
 - Visual mode commands for code explanation, review, optimization, and refactoring
 - Support for error debugging and documentation generation
@@ -40,25 +41,8 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 
 ## Claude AI Commands
 
-### Visual Mode Commands
-- `<leader>ce` - Explain selected code
-- `<leader>cr` - Review code for bugs and improvements
-- `<leader>co` - Optimize selected code
-- `<leader>cf` - Refactor code for readability
-- `<leader>ct` - Generate unit tests
-- `<leader>cd` - Add documentation/comments
-- `<leader>cp` - Custom prompt
-- `<leader>cl` - List active Claude terminals
-
-### Normal Mode Commands
-- `<leader>cb` - Review entire file
-- `<leader>ch` - Help with error messages
-
-### Ex Commands
-- `:ClaudeExplain` - Explain current line
-- `:ClaudeDebug` - Debug current file
-- `:ClaudeList` - List and reconnect to active terminals
-- `:ClaudeKillAll` - Kill all Claude terminals
+> **Note:** This configuration uses the remote plugin [kaipo-claude-code.nvim](https://github.com/kakapo1933/kaipo-claude-code.nvim). 
+> For the latest commands and documentation, refer to the plugin repository.
 
 ## Key Features
 
@@ -91,8 +75,10 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 │   │   ├── lazy.lua        # Plugin manager setup + Claude integration
 │   │   └── options.lua     # Neovim options
 │   └── plugins/
-│       ├── claude-nvim.lua # Claude AI integration plugin
+│       ├── claude.lua      # Claude AI integration plugin
+│       ├── dashboard.lua   # Dashboard configuration
 │       ├── example.lua     # Example plugin configuration
+│       ├── kaipo-git.lua   # Git worktree management
 │       └── tailwind.lua    # Tailwind CSS support
 ├── stylua.toml             # Lua formatter configuration
 ├── lazyvim.json            # LazyVim configuration
@@ -108,20 +94,20 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 
 ## Customization
 
-### Adding New Claude Prompts
-Edit `lua/plugins/claude-nvim.lua` and add new keymaps in the `setup()` function:
+### Plugin Configuration
+The Claude integration is configured in `lua/plugins/claude.lua`:
 
 ```lua
-keymap("v", "<leader>cx", M.send_to_claude("Your custom prompt"), { desc = "Claude: Custom action" })
+return {
+  "kakapo1933/kaipo-claude-code.nvim",
+  config = function()
+    require("claude").setup()
+  end,
+}
 ```
 
-### Modifying UI
-Adjust the floating window settings in the `create_claude_terminal()` function:
-
-```lua
-local width = math.floor(vim.o.columns * 0.8)  -- 80% of screen width
-local height = math.floor(vim.o.lines * 0.8)   -- 80% of screen height
-```
+### Customization
+For customization options, refer to the [plugin documentation](https://github.com/kakapo1933/kaipo-claude-code.nvim).
 
 ## Troubleshooting
 
@@ -137,11 +123,10 @@ Check for syntax errors:
 nvim --headless -c "checkhealth" -c "qa!"
 ```
 
-### Terminal Connection Problems
-List active terminals for debugging:
-```vim
-:ClaudeList
-```
+### Plugin Issues
+Check the plugin status and documentation:
+- Plugin repository: [kaipo-claude-code.nvim](https://github.com/kakapo1933/kaipo-claude-code.nvim)
+- Use `:Lazy` to check plugin installation status
 
 ## Contributing
 
@@ -149,4 +134,4 @@ Feel free to submit issues and pull requests to improve this configuration.
 
 ## License
 
-This configuration is provided as-is for personal use.
+This configuration is provided as-is for personal use under the Apache License 2.0.

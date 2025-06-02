@@ -24,6 +24,9 @@ return {
         hide = {
           statusline = false,
         },
+        preview = {
+          winblend = 0,
+        },
         config = {
           header = {
             "",
@@ -66,6 +69,17 @@ return {
         },
       }
       return opts
+    end,
+    config = function(_, opts)
+      require("dashboard").setup(opts)
+      
+      -- Ensure dashboard window has solid background
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "dashboard",
+        callback = function()
+          vim.wo.winblend = 0
+        end,
+      })
     end,
   },
 }
