@@ -15,6 +15,7 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 - Based on [LazyVim](https://github.com/LazyVim/LazyVim)
 - Lazy loading for optimal performance
 - Custom plugin configurations
+- LuaRocks integration via rocks.nvim
 
 
 ## Installation
@@ -80,6 +81,7 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 │       ├── claude.lua      # Claude AI integration plugin
 │       ├── dashboard.lua   # Dashboard configuration
 │       ├── example.lua     # Example plugin configuration
+│       ├── rocks.lua       # LuaRocks package management
 │       └── tailwind.lua    # Tailwind CSS support
 ├── stylua.toml             # Lua formatter configuration
 ├── lazyvim.json            # LazyVim configuration
@@ -91,6 +93,7 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 - Neovim >= 0.9.0
 - Git
 - Claude CLI
+- LuaRocks (for rocks.nvim package management)
 - A Nerd Font (for icons)
 
 ## Customization
