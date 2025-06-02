@@ -16,6 +16,12 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 - Lazy loading for optimal performance
 - Custom plugin configurations
 
+### 🌲 Git Worktree Management
+- [git-worktree.nvim](https://github.com/ThePrimeagen/git-worktree.nvim) integration
+- Quick switching between git worktrees with `<leader>gw`
+- Create new worktrees with `<leader>gW`
+- Telescope integration for seamless workflow
+
 
 ## Installation
 
@@ -80,6 +86,7 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 │       ├── claude.lua      # Claude AI integration plugin
 │       ├── dashboard.lua   # Dashboard configuration
 │       ├── example.lua     # Example plugin configuration
+│       ├── git-worktree.lua # Git worktree management
 │       └── tailwind.lua    # Tailwind CSS support
 ├── stylua.toml             # Lua formatter configuration
 ├── lazyvim.json            # LazyVim configuration
