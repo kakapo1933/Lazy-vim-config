@@ -6,7 +6,7 @@ return {
   end,
 }
 
--- Commented out local development version
+-- Local development version
 --[[
 return {
   dir = "/Users/kaipochen/Desktop/Home/kaipo-claude-code.nvim",

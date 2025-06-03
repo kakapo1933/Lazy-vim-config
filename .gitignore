@@ -42,5 +42,8 @@ test_*.py
 # Temporary directories
 /tmp/
 
+# Node.js dependencies
+node_modules/
+
 # Don't track the separate plugin directory we created
 claude-nvim.nvim/

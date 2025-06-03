@@ -22,6 +22,11 @@ A LazyVim-based Neovim configuration with custom Claude AI integration.
 - Create new worktrees with `<leader>gW`
 - Telescope integration for seamless workflow
 
+### 🚫 Git Ignore Configuration
+- Comprehensive .gitignore file for Neovim development
+- Excludes common temporary files, OS-generated files, and build artifacts
+- Includes Node.js dependencies (node_modules) exclusion
+
 
 ## Installation
 
@@ -139,6 +144,12 @@ Check the plugin status and documentation:
 ## Contributing
 
 Feel free to submit issues and pull requests to improve this configuration.
+
+## Recent Updates
+
+- **2025-01-06**: Added node_modules to .gitignore for better Node.js project support
+- **2025-01-06**: Updated claude.lua plugin comment for clarity
+- **2025-01-05**: Added git-worktree.nvim plugin for enhanced Git workflow management
 
 ## License
 
