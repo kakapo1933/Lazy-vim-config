@@ -1,18 +1,9 @@
--- Claude Code Integration from GitHub
+-- Claude Code Integration (Local Development)
 return {
   "kakapo1933/kaipo-claude-code.nvim",
+  -- dev = true,
   config = function()
     require("claude").setup()
   end,
 }
 
--- Local development version
---[[
-return {
-  dir = "/Users/kaipochen/Desktop/Home/kaipo-claude-code.nvim",
-  name = "kaipo-claude-code.nvim",
-  config = function()
-    require("claude").setup()
-  end,
-}
---]]
