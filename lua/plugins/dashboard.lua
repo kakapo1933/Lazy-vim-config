@@ -20,7 +20,7 @@ return {
     priority = 1000,
     opts = function()
       local opts = {
-        theme = "doom",
+        theme = "hyper",
         hide = {
           statusline = false,
         },
@@ -51,15 +51,15 @@ return {
             "",
           },
           center = {
-            { action = "Telescope find_files", desc = "Find File ", icon = "", key = "f" },
-            { action = "ene | startinsert", desc = "New File ", icon = "", key = "n" },
-            { action = "Telescope oldfiles", desc = "Recent Files ", icon = "", key = "r" },
-            { action = "Telescope live_grep", desc = "Find Text ", icon = "", key = "g" },
-            { action = 'lua require("persistence").load()', desc = "Restore Session ", icon = "", key = "s" },
-            { action = "e $MYVIMRC", desc = "Config ", icon = "", key = "c" },
-            { action = "Lazy", desc = "Lazy ", icon = "󰒲", key = "l" },
-            { action = "LazyExtras", desc = "Lazy Extras ", icon = "", key = "x" },
-            { action = "qa", desc = "Quit ", icon = "", key = "q" },
+            { action = "Telescope find_files", desc = "Find File ", icon = " ", key = "f" },
+            { action = "ene | startinsert", desc = "New File ", icon = " ", key = "n" },
+            { action = "Telescope oldfiles", desc = "Recent Files ", icon = " ", key = "r" },
+            { action = "Telescope live_grep", desc = "Find Text ", icon = " ", key = "g" },
+            { action = 'lua require("persistence").load()', desc = "Restore Session ", icon = " ", key = "s" },
+            { action = "e $MYVIMRC", desc = "Config ", icon = " ", key = "c" },
+            { action = "Lazy", desc = "Lazy ", icon = "󰒲 ", key = "l" },
+            { action = "LazyExtras", desc = "Lazy Extras ", icon = " ", key = "x" },
+            { action = "qa", desc = "Quit ", icon = " ", key = "q" },
           },
           footer = function()
             local stats = require("lazy").stats()
@@ -72,7 +72,7 @@ return {
     end,
     config = function(_, opts)
       require("dashboard").setup(opts)
-      
+
       -- Ensure dashboard window has solid background
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "dashboard",
