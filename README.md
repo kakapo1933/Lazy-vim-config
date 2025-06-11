@@ -147,6 +147,9 @@ Feel free to submit issues and pull requests to improve this configuration.
 
 ## Recent Updates
 
+- **2025-01-12**: Switched from nvim-tree to neo-tree for improved file explorer functionality
+- **2025-01-12**: Enhanced lualine statusline with custom mode colors, git branch icons, and time display
+- **2025-01-12**: Updated LazyVim deprecation warnings for better compatibility
 - **2025-01-06**: Added node_modules to .gitignore for better Node.js project support
 - **2025-01-06**: Updated claude.lua plugin comment for clarity
 - **2025-01-05**: Added git-worktree.nvim plugin for enhanced Git workflow management
