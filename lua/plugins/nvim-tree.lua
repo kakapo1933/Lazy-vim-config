@@ -29,6 +29,8 @@ return {
       vim.keymap.set("n", "<Right>", api.node.open.edit, opts("Open"))
       vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
       vim.keymap.set("n", "<Left>", api.node.navigate.parent_close, opts("Close Directory"))
+      vim.keymap.set("n", "/", api.live_filter.start, opts("Start filtering"))
+      vim.keymap.set("n", "F", api.live_filter.clear, opts("Clear filter"))
     end
 
     -- setup with options
@@ -39,6 +41,18 @@ return {
       },
       view = {
         width = 30,
+        side = "left",
+        preserve_window_proportions = false,
+        number = false,
+        relativenumber = false,
+        signcolumn = "yes",
+      },
+      actions = {
+        open_file = {
+          window_picker = {
+            enable = true,
+          },
+        },
       },
       auto_reload_on_write = true,
       reload_on_bufenter = true,
@@ -72,6 +86,10 @@ return {
       filters = {
         dotfiles = true,
       },
+      live_filter = {
+        prefix = "Search: ",
+        always_show_folders = true,
+      },
       git = {
         enable = true,
         ignore = false,
@@ -104,23 +122,48 @@ return {
         api.tree.reload()
       end
     end
-    
+
     -- Refresh on various events
-    vim.api.nvim_create_autocmd({"BufWritePost", "BufEnter", "FocusGained"}, {
+    vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "FocusGained" }, {
       callback = function()
         vim.defer_fn(refresh_git_status, 100)
       end,
     })
-    
+
     -- Refresh after shell commands (git operations)
     vim.api.nvim_create_autocmd("TermClose", {
       callback = function()
         vim.defer_fn(refresh_git_status, 500)
       end,
     })
-    
+
     -- Add manual refresh keybinding
     vim.keymap.set("n", "<leader>gr", refresh_git_status, { desc = "Refresh git status in tree" })
+    
+
+    -- Style the search bar with Catppuccin colors
+    vim.api.nvim_set_hl(0, "NvimTreeLiveFilterPrefix", {
+      fg = "#8aadf4", -- Blue from Catppuccin
+      bg = "#1e2030", -- Surface0 from Catppuccin
+      bold = true,
+    })
+    vim.api.nvim_set_hl(0, "NvimTreeLiveFilterValue", {
+      fg = "#cad3f5", -- Text color from Catppuccin
+      bg = "#1e2030", -- Surface0 from Catppuccin
+      italic = true,
+    })
+
+    -- Style the search input area
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "NvimTree",
+      callback = function()
+        vim.api.nvim_set_hl(0, "NvimTreeStatusLine", {
+          fg = "#8aadf4",
+          bg = "#1e2030",
+          bold = true,
+        })
+      end,
+    })
   end,
   keys = {
     { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Toggle file explorer" },
