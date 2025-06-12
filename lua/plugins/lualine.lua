@@ -30,7 +30,6 @@ return {
         component_separators = { left = "", right = "" },
       },
       sections = {
-        color = { bg = "#181926" },
         lualine_a = {
           {
             "mode",
