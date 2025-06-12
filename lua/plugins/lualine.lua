@@ -30,6 +30,7 @@ return {
         component_separators = { left = "", right = "" },
       },
       sections = {
+        color = { bg = "#181926" },
         lualine_a = {
           {
             "mode",
@@ -40,18 +41,17 @@ return {
                 v = { fg = "#363a4f", bg = "#f5bde6", gui = "bold" }, -- Visual
                 V = { fg = "#363a4f", bg = "#c6a0f6", gui = "bold" }, -- Visual Line
                 c = { fg = "#363a4f", bg = "#eed49f", gui = "bold" }, -- Command
-                r = { fg = "#363a4f", bg = "#ed8796", gui = "bold" }, -- Replace
+                R = { fg = "#363a4f", bg = "#ed8796", gui = "bold" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
-            separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
           },
         },
         lualine_b = {
           {
             "branch",
             icon = "󰘬",
-            color = { fg = "#c6a0f6" },
           },
         },
         lualine_c = {
@@ -64,8 +64,18 @@ return {
               hint = icons.diagnostics.Hint,
             },
           },
-          { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-          { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+          {
+            "filetype",
+            icon_only = true,
+            padding = { left = 1, right = 0 },
+            separator = "",
+          },
+          {
+            "filename",
+            path = 1,
+            symbols = { modified = "  ", readonly = "", unnamed = "" },
+            color = { fg = "#8bd5ca" },
+          },
         },
         lualine_x = {
           {
@@ -78,6 +88,7 @@ return {
             color = function()
               return { fg = Snacks.util.color("Statement") }
             end,
+            separator = { left = "\u{e0b7}", right = "" }, -- Rounded pill separators
           },
           {
             function()
@@ -115,7 +126,18 @@ return {
             function()
               return "󰥔 " .. os.date("%R")
             end,
-            color = { fg = "#363a4f", bg = "#89b4fa", gui = "bold" },
+            color = function()
+              local mode_colors = {
+                n = { fg = "#363a4f", bg = "#89b4fa", gui = "bold" }, -- Normal
+                i = { fg = "#363a4f", bg = "#a6e3a1", gui = "bold" }, -- Insert
+                v = { fg = "#363a4f", bg = "#f5bde6", gui = "bold" }, -- Visual
+                V = { fg = "#363a4f", bg = "#c6a0f6", gui = "bold" }, -- Visual Line
+                c = { fg = "#363a4f", bg = "#eed49f", gui = "bold" }, -- Command
+                R = { fg = "#363a4f", bg = "#ed8796", gui = "bold" }, -- Replace
+              }
+              return mode_colors[vim.fn.mode()] or mode_colors.n
+            end,
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
           },
         },
       },
