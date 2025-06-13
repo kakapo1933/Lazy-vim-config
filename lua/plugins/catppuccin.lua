@@ -96,11 +96,10 @@ return {
           NeoTreeFileName = { fg = colors.lavender },
           -- NeoTreeFileIcon = { fg = colors.blue },
           -- NeoTreeTitleBar = { fg = colors.crust, bg = colors.blue },
-          -- NeoTreeFloatTitle = { fg = colors.crust, bg = colors.blue },
-          -- NeoTreeFloatBorder = { fg = colors.blue },
+          -- Window separators
+          NeoTreeWinSeparator = { fg = colors.teal },
+          -- NeoTreeVertSplit = { fg = colors.surface0, bg = colors.base },
           -- The path/statusline at the bottom
-          NeoTreeStatusLine = { fg = colors.surface0, bg = colors.teal, style = { "bold" } },
-          NeoTreeStatusLineNC = { fg = colors.overlay0, bg = colors.mantle },
         }
       end,
     },
