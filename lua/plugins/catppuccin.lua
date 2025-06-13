@@ -37,7 +37,7 @@ return {
       integrations = {
         cmp = true,
         gitsigns = true,
-        nvimtree = true,
+        neotree = true,
         treesitter = true,
         notify = true,
         mini = {
@@ -88,6 +88,21 @@ return {
           },
         },
       },
+      custom_highlights = function(colors)
+        return {
+          -- Customize neo-tree colors
+          NeoTreeRootName = { fg = colors.mauve, style = { "bold" } },
+          NeoTreeDirectoryName = { fg = colors.lavender },
+          NeoTreeFileName = { fg = colors.lavender },
+          -- NeoTreeFileIcon = { fg = colors.blue },
+          -- NeoTreeTitleBar = { fg = colors.crust, bg = colors.blue },
+          -- NeoTreeFloatTitle = { fg = colors.crust, bg = colors.blue },
+          -- NeoTreeFloatBorder = { fg = colors.blue },
+          -- The path/statusline at the bottom
+          NeoTreeStatusLine = { fg = colors.surface0, bg = colors.teal, style = { "bold" } },
+          NeoTreeStatusLineNC = { fg = colors.overlay0, bg = colors.mantle },
+        }
+      end,
     },
   },
 
