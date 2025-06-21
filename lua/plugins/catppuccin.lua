@@ -99,7 +99,7 @@ return {
           -- Window separators
           NeoTreeWinSeparator = { fg = colors.teal },
           -- NeoTreeVertSplit = { fg = colors.surface0, bg = colors.base },
-          -- The path/statusline at the bottom
+          NeoTreeFileSize = { fg = colors.overlay1 },
         }
       end,
     },

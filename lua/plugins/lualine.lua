@@ -24,7 +24,7 @@ return {
     return {
       options = {
         theme = "auto",
-        globalstatus = true,
+        globalstatus = false,
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
         section_separators = { left = "\u{e0b4}", right = "\u{e0b6}" },
         component_separators = { left = "", right = "" },
