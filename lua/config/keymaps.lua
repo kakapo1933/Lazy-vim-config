@@ -6,3 +6,7 @@ vim.keymap.set("n", "<C-S-j>", ":m .+1<CR>==", { desc = "Move line down" })
 vim.keymap.set("n", "<C-S-k>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<C-S-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<C-S-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Git shortcuts
+vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Git: Preview Hunk" })
+vim.keymap.set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Git: Blame Line" })
