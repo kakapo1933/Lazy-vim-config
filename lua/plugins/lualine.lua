@@ -24,7 +24,7 @@ return {
     return {
       options = {
         theme = "auto",
-        globalstatus = false,
+        globalstatus = true,
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
         section_separators = { left = "\u{e0b4}", right = "\u{e0b6}" },
         component_separators = { left = "", right = "" },
@@ -51,6 +51,17 @@ return {
           {
             "branch",
             icon = "󰘬",
+            color = function()
+              local mode_colors = {
+                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
+                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
+                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
+                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
+                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+              }
+              return mode_colors[vim.fn.mode()] or mode_colors.n
+            end,
           },
         },
         lualine_c = {
@@ -68,12 +79,14 @@ return {
             icon_only = true,
             padding = { left = 1, right = 0 },
             separator = "",
+            color = { bg = "#24273a" },
           },
           {
             "filename",
             path = 1,
             symbols = { modified = "  ", readonly = "", unnamed = "" },
-            color = { fg = "#8bd5ca" },
+            color = { fg = "", bg = "#24273a", gui = "bold" },
+            separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
           },
         },
         lualine_x = {
@@ -85,9 +98,9 @@ return {
               return package.loaded["noice"] and require("noice").api.status.command.has()
             end,
             color = function()
-              return { fg = Snacks.util.color("Statement") }
+              return { fg = "#f5a97f", bg = "#24273a" }
             end,
-            separator = { left = "\u{e0b7}", right = "" }, -- Rounded pill separators
+            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separators
           },
           {
             function()
@@ -97,15 +110,17 @@ return {
               return package.loaded["noice"] and require("noice").api.status.mode.has()
             end,
             color = function()
-              return { fg = Snacks.util.color("Constant") }
+              return { fg = "#ed8796" }
             end,
+            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
           },
           {
             require("lazy.status").updates,
             cond = require("lazy.status").has_updates,
             color = function()
-              return { fg = Snacks.util.color("Special") }
+              return { fg = "#f5bde6", bg = "#24273a" }
             end,
+            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
           },
           {
             "diff",
@@ -114,11 +129,43 @@ return {
               modified = icons.git.modified,
               removed = icons.git.removed,
             },
+            color = function()
+              return { bg = "#24273a" }
+            end,
+            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
           },
         },
         lualine_y = {
-          { "progress", separator = " ", padding = { left = 1, right = 0 } },
-          { "location", padding = { left = 0, right = 1 } },
+          {
+            "progress",
+            padding = { left = 1, right = 0 },
+            color = function()
+              local mode_colors = {
+                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
+                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
+                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
+                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
+                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+              }
+              return mode_colors[vim.fn.mode()] or mode_colors.n
+            end,
+          },
+          {
+            "location",
+            padding = { left = 1, right = 1 },
+            color = function()
+              local mode_colors = {
+                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
+                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
+                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
+                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
+                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+              }
+              return mode_colors[vim.fn.mode()] or mode_colors.n
+            end,
+          },
         },
         lualine_z = {
           {
@@ -149,7 +196,6 @@ return {
         lualine_z = {},
       },
       tabline = {},
-      extensions = { "neo-tree", "lazy" },
     }
   end,
 }
