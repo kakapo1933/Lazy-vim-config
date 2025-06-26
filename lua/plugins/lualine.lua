@@ -77,9 +77,9 @@ return {
           {
             "filetype",
             icon_only = true,
-            padding = { left = 1, right = 0 },
-            separator = "",
+            padding = { left = 2, right = 1 },
             color = { bg = "#24273a" },
+            separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
           },
           {
             "filename",
@@ -98,21 +98,9 @@ return {
               return package.loaded["noice"] and require("noice").api.status.command.has()
             end,
             color = function()
-              return { fg = "#f5a97f", bg = "#24273a" }
+              return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
             end,
             separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separators
-          },
-          {
-            function()
-              return require("noice").api.status.mode.get()
-            end,
-            cond = function()
-              return package.loaded["noice"] and require("noice").api.status.mode.has()
-            end,
-            color = function()
-              return { fg = "#ed8796" }
-            end,
-            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
           },
           {
             require("lazy.status").updates,

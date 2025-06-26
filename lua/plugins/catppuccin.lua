@@ -63,10 +63,10 @@ return {
         hop = false,
         illuminate = {
           enabled = true,
-          lsp = false,
+          lsp = true,
         },
-        lsp_saga = false,
-        gitgutter = false,
+        lsp_saga = true,
+        gitgutter = true,
         leap = false,
         mason = true,
         native_lsp = {
