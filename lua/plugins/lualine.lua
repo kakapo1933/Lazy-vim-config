@@ -73,6 +73,7 @@ return {
               info = icons.diagnostics.Info,
               hint = icons.diagnostics.Hint,
             },
+            color = { bg = "#24273a" },
           },
           {
             "filetype",
