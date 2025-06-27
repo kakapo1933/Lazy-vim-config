@@ -53,15 +53,16 @@ return {
             icon = "󰘬",
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
-                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
-                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
-                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
-                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
-                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+                n = { fg = "#89b4fa", bg = "#363a4f", gui = "bold" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#363a4f", gui = "bold" }, -- Insert
+                v = { fg = "#f5bde6", bg = "#363a4f", gui = "bold" }, -- Visual
+                V = { fg = "#c6a0f6", bg = "#363a4f", gui = "bold" }, -- Visual Line
+                c = { fg = "#eed49f", bg = "#363a4f", gui = "bold" }, -- Command
+                R = { fg = "#ed8796", bg = "#363a4f", gui = "bold" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
+            padding = { left = 2, right = 2 },
           },
         },
         lualine_c = {
@@ -78,7 +79,7 @@ return {
           {
             "filetype",
             icon_only = true,
-            padding = { left = 2, right = 1 },
+            padding = { left = 2, right = 0 },
             color = { bg = "#24273a" },
             separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
           },
@@ -88,6 +89,7 @@ return {
             symbols = { modified = "  ", readonly = "", unnamed = "" },
             color = { fg = "", bg = "#24273a", gui = "bold" },
             separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
+            padding = { left = 0, right = 3 },
           },
         },
         lualine_x = {
@@ -102,6 +104,7 @@ return {
               return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
             end,
             separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separators
+            padding = { left = 2, right = 1 },
           },
           {
             require("lazy.status").updates,
