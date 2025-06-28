@@ -45,13 +45,19 @@ return {
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
-            paddinng = { left = 2, right = 2 },
+            padding = { left = 2, right = 2 },
           },
         },
         lualine_b = {
           {
-            "branch",
-            icon = "󰘬",
+            function()
+              local branch = vim.fn.system("git branch --show-current 2>/dev/null"):gsub("\n", "")
+              if vim.v.shell_error ~= 0 or branch == "" then
+                return "󰘬"
+              else
+                return "󰘬 " .. branch
+              end
+            end,
             color = function()
               local mode_colors = {
                 n = { fg = "#89b4fa", bg = "#363a4f", gui = "bold" }, -- Normal
@@ -81,19 +87,12 @@ return {
             separator = { left = "\u{e0b6}", right = "" },
           },
           {
-            "filetype",
-            icon_only = true,
-            padding = { left = 2, right = 0 },
-            color = { bg = "#24273a" },
-            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
-          },
-          {
             "filename",
             path = 1,
             symbols = { modified = "  ", readonly = "", unnamed = "" },
             color = { fg = "#b7bdf8", bg = "#24273a" },
-            separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
-            padding = { left = 0, right = 2 },
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+            padding = { left = 2, right = 2 },
           },
         },
         lualine_x = {
@@ -108,7 +107,7 @@ return {
               return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
-            padding = { left = 2, right = 2 },
+            padding = { left = 2, right = 0 },
           },
           {
             require("lazy.status").updates,
@@ -117,7 +116,7 @@ return {
               return { fg = "#f5bde6", bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separator
-            padding = { left = 2, right = 2 },
+            padding = { left = 2, right = 0 },
           },
           {
             "diff",
@@ -130,7 +129,38 @@ return {
               return { bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separator
-            padding = { left = 2, right = 2 },
+            padding = { left = 2, right = 0 },
+          },
+          -- File encoding
+          {
+            "encoding",
+            color = function()
+              return { fg = "#cdd6f4", bg = "#24273a" }
+            end,
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" },
+            padding = { left = 2, right = 0 },
+          },
+          -- Current language
+          {
+            "filetype",
+            icon_only = true,
+            padding = { left = 2, right = 0 },
+            color = { bg = "#24273a" },
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+          },
+          {
+            function()
+              local ft = vim.bo.filetype
+              if ft == "" then
+                return "plaintext"
+              end
+              return ft
+            end,
+            color = function()
+              return { fg = "#b7bdf8", bg = "#24273a" }
+            end,
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" },
+            padding = { left = 0, right = 2 },
           },
         },
         lualine_y = {
@@ -148,7 +178,7 @@ return {
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
-            separator = { left = "", right = "" },
+            separator = { left = "\u{e0b6}", right = "" },
           },
           {
             "location",
