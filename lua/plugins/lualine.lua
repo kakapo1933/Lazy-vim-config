@@ -92,6 +92,7 @@ return {
             end,
             color = { fg = "#b7bdf8", bg = "#24273a" },
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+            padding = { left = 2, right = 0 },
           },
           {
             "filename",
@@ -99,7 +100,7 @@ return {
             symbols = { modified = "  ", readonly = "", unnamed = "" },
             color = { fg = "#b7bdf8", bg = "#24273a" },
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
-            padding = { left = 0, right = 2 },
+            padding = { left = 1, right = 2 },
           },
         },
         lualine_x = {
