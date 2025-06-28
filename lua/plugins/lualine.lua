@@ -45,6 +45,7 @@ return {
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+            paddinng = { left = 2, right = 2 },
           },
         },
         lualine_b = {
@@ -75,6 +76,7 @@ return {
               hint = icons.diagnostics.Hint,
             },
             color = { bg = "#24273a" },
+            padding = { left = 2, right = 0 },
           },
           {
             "filetype",
@@ -89,7 +91,7 @@ return {
             symbols = { modified = "  ", readonly = "", unnamed = "" },
             color = { fg = "", bg = "#24273a", gui = "bold" },
             separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
-            padding = { left = 0, right = 3 },
+            padding = { left = 0, right = 2 },
           },
         },
         lualine_x = {
@@ -104,7 +106,7 @@ return {
               return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
             end,
             separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separators
-            padding = { left = 2, right = 1 },
+            padding = { left = 2, right = 0 },
           },
           {
             require("lazy.status").updates,
@@ -113,6 +115,7 @@ return {
               return { fg = "#f5bde6", bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
+            padding = { left = 2, right = 0 },
           },
           {
             "diff",
@@ -125,12 +128,13 @@ return {
               return { bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
+            padding = { left = 2, right = 2 },
           },
         },
         lualine_y = {
           {
             "progress",
-            padding = { left = 1, right = 0 },
+            padding = { left = 2, right = 1 },
             color = function()
               local mode_colors = {
                 n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
@@ -145,7 +149,6 @@ return {
           },
           {
             "location",
-            padding = { left = 1, right = 1 },
             color = function()
               local mode_colors = {
                 n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
@@ -157,6 +160,7 @@ return {
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
+            padding = { left = 1, right = 2 },
           },
         },
         lualine_z = {
@@ -176,6 +180,7 @@ return {
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+            padding = { left = 2, right = 2 },
           },
         },
       },
