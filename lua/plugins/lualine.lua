@@ -64,6 +64,7 @@ return {
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
             padding = { left = 2, right = 2 },
+            separator = { left = "", right = "" },
           },
         },
         lualine_c = {
@@ -77,19 +78,20 @@ return {
             },
             color = { bg = "#24273a" },
             padding = { left = 2, right = 0 },
+            separator = { left = "\u{e0b6}", right = "" },
           },
           {
             "filetype",
             icon_only = true,
             padding = { left = 2, right = 0 },
             color = { bg = "#24273a" },
-            separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
           },
           {
             "filename",
             path = 1,
             symbols = { modified = "  ", readonly = "", unnamed = "" },
-            color = { fg = "", bg = "#24273a", gui = "bold" },
+            color = { fg = "#b7bdf8", bg = "#24273a" },
             separator = { left = "", right = "\u{e0b4}" }, -- Rounded pill separators
             padding = { left = 0, right = 2 },
           },
@@ -105,8 +107,8 @@ return {
             color = function()
               return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
             end,
-            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separators
-            padding = { left = 2, right = 0 },
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
+            padding = { left = 2, right = 2 },
           },
           {
             require("lazy.status").updates,
@@ -114,8 +116,8 @@ return {
             color = function()
               return { fg = "#f5bde6", bg = "#24273a" }
             end,
-            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
-            padding = { left = 2, right = 0 },
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separator
+            padding = { left = 2, right = 2 },
           },
           {
             "diff",
@@ -127,7 +129,7 @@ return {
             color = function()
               return { bg = "#24273a" }
             end,
-            separator = { left = "\u{e0b6}", right = "" }, -- Rounded pill separator
+            separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separator
             padding = { left = 2, right = 2 },
           },
         },
@@ -146,6 +148,7 @@ return {
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
+            separator = { left = "", right = "" },
           },
           {
             "location",
