@@ -60,12 +60,12 @@ return {
             end,
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#363a4f", gui = "bold" }, -- Normal
-                i = { fg = "#a6e3a1", bg = "#363a4f", gui = "bold" }, -- Insert
-                v = { fg = "#f5bde6", bg = "#363a4f", gui = "bold" }, -- Visual
-                V = { fg = "#c6a0f6", bg = "#363a4f", gui = "bold" }, -- Visual Line
-                c = { fg = "#eed49f", bg = "#363a4f", gui = "bold" }, -- Command
-                R = { fg = "#ed8796", bg = "#363a4f", gui = "bold" }, -- Replace
+                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
+                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
+                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
+                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
+                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
@@ -172,8 +172,14 @@ return {
         },
         lualine_y = {
           {
-            "progress",
+            function()
+              return ""
+            end,
             padding = { left = 2, right = 1 },
+          },
+          {
+            "progress",
+            padding = { left = 0, right = 0 },
             color = function()
               local mode_colors = {
                 n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
