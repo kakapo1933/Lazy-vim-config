@@ -35,7 +35,7 @@ return {
             "mode",
             color = function()
               local mode_colors = {
-                n = { fg = "#1e1e2e", bg = "#89b4fa", gui = "bold" }, -- Normal
+                n = { fg = "#1e1e2e", bg = "#b4befe", gui = "bold" }, -- Normal
                 i = { fg = "#1e1e2e", bg = "#a6e3a1", gui = "bold" }, -- Insert
                 v = { fg = "#1e1e2e", bg = "#f5c2e7", gui = "bold" }, -- Visual
                 V = { fg = "#1e1e2e", bg = "#cba6f7", gui = "bold" }, -- Visual Line
@@ -60,7 +60,7 @@ return {
             end,
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                n = { fg = "#b4befe", bg = "#313244" }, -- Normal
                 i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
                 v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
                 V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
@@ -177,6 +177,17 @@ return {
             function()
               return ""
             end,
+            color = function()
+              local mode_colors = {
+                n = { fg = "#b4befe", bg = "#313244" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
+                v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
+                V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
+                c = { fg = "#f9e2af", bg = "#313244" }, -- Command
+                R = { fg = "#f38ba8", bg = "#313244" }, -- Replace
+              }
+              return mode_colors[vim.fn.mode()] or mode_colors.n
+            end,
             padding = { left = 2, right = 1 },
           },
           {
@@ -184,7 +195,7 @@ return {
             padding = { left = 0, right = 0 },
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                n = { fg = "#b4befe", bg = "#313244" }, -- Normal
                 i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
                 v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
                 V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
@@ -199,7 +210,7 @@ return {
             "location",
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                n = { fg = "#b4befe", bg = "#313244" }, -- Normal
                 i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
                 v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
                 V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
@@ -218,7 +229,7 @@ return {
             end,
             color = function()
               local mode_colors = {
-                n = { fg = "#1e1e2e", bg = "#89b4fa", gui = "bold" }, -- Normal
+                n = { fg = "#1e1e2e", bg = "#b4befe", gui = "bold" }, -- Normal
                 i = { fg = "#1e1e2e", bg = "#a6e3a1", gui = "bold" }, -- Insert
                 v = { fg = "#1e1e2e", bg = "#f5c2e7", gui = "bold" }, -- Visual
                 V = { fg = "#1e1e2e", bg = "#cba6f7", gui = "bold" }, -- Visual Line
