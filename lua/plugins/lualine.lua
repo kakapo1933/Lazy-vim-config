@@ -225,7 +225,7 @@ return {
         lualine_z = {
           {
             function()
-              return "󰥔 " .. os.date("%R")
+              return "󰥔 " .. os.date("%H:%M:%S")
             end,
             color = function()
               local mode_colors = {
