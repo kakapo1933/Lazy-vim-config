@@ -109,7 +109,7 @@ return {
         DashboardDesc = { fg = colors.lavender },
         DashboardIcon = { fg = colors.mauve },
         DashboardShortCut = { fg = colors.mauve },
-        SnacksDashboardHeader = { fg = colors.pink },
+        SnacksDashboardHeader = { fg = colors.lavender },
         SnacksDashboardKey = { fg = colors.pink },
         SnacksDashboardDesc = { fg = colors.lavender },
         SnacksDashboardIcon = { fg = colors.mauve },
