@@ -23,7 +23,7 @@ return {
 
     return {
       options = {
-        theme = "auto",
+        theme = "catppuccin",
         globalstatus = true,
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
         section_separators = { left = "\u{e0b4}", right = "\u{e0b6}" },
@@ -35,12 +35,12 @@ return {
             "mode",
             color = function()
               local mode_colors = {
-                n = { fg = "#363a4f", bg = "#89b4fa", gui = "bold" }, -- Normal
-                i = { fg = "#363a4f", bg = "#a6e3a1", gui = "bold" }, -- Insert
-                v = { fg = "#363a4f", bg = "#f5bde6", gui = "bold" }, -- Visual
-                V = { fg = "#363a4f", bg = "#c6a0f6", gui = "bold" }, -- Visual Line
-                c = { fg = "#363a4f", bg = "#eed49f", gui = "bold" }, -- Command
-                R = { fg = "#363a4f", bg = "#ed8796", gui = "bold" }, -- Replace
+                n = { fg = "#1e1e2e", bg = "#89b4fa", gui = "bold" }, -- Normal
+                i = { fg = "#1e1e2e", bg = "#a6e3a1", gui = "bold" }, -- Insert
+                v = { fg = "#1e1e2e", bg = "#f5c2e7", gui = "bold" }, -- Visual
+                V = { fg = "#1e1e2e", bg = "#cba6f7", gui = "bold" }, -- Visual Line
+                c = { fg = "#1e1e2e", bg = "#f9e2af", gui = "bold" }, -- Command
+                R = { fg = "#1e1e2e", bg = "#f38ba8", gui = "bold" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
@@ -60,12 +60,12 @@ return {
             end,
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
-                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
-                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
-                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
-                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
-                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
+                v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
+                V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
+                c = { fg = "#f9e2af", bg = "#313244" }, -- Command
+                R = { fg = "#f38ba8", bg = "#313244" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
@@ -90,15 +90,16 @@ return {
             function()
               return "󰈙"
             end,
-            color = { fg = "#b7bdf8", bg = "#24273a" },
+            color = { fg = "#bac2de", bg = "#24273a" },
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
             padding = { left = 2, right = 0 },
           },
+
           {
             "filename",
             path = 1,
             symbols = { modified = "  ", readonly = "", unnamed = "" },
-            color = { fg = "#b7bdf8", bg = "#24273a" },
+            color = { fg = "#b4befe", bg = "#24273a" },
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
             padding = { left = 1, right = 2 },
           },
@@ -106,13 +107,13 @@ return {
         lualine_x = {
           {
             function()
-              return require("noice").api.status.command.get()
+              return "[" .. require("noice").api.status.command.get() .. "]"
             end,
             cond = function()
               return package.loaded["noice"] and require("noice").api.status.command.has()
             end,
             color = function()
-              return { fg = "#f5a97f", bg = "#24273a", gui = "bold" }
+              return { fg = "#fab387", bg = "#24273a", gui = "bold" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
             padding = { left = 2, right = 0 },
@@ -121,7 +122,7 @@ return {
             require("lazy.status").updates,
             cond = require("lazy.status").has_updates,
             color = function()
-              return { fg = "#f5bde6", bg = "#24273a" }
+              return { fg = "#f5c2e7", bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separator
             padding = { left = 2, right = 0 },
@@ -143,7 +144,7 @@ return {
           {
             "encoding",
             color = function()
-              return { fg = "#cdd6f4", bg = "#24273a" }
+              return { fg = "#b4befe", bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" },
             padding = { left = 2, right = 0 },
@@ -153,7 +154,7 @@ return {
             "filetype",
             icon_only = true,
             padding = { left = 2, right = 0 },
-            color = { bg = "#24273a" },
+            color = { fg = "#b4befe", bg = "#24273a" },
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" }, -- Rounded pill separators
           },
           {
@@ -165,7 +166,7 @@ return {
               return ft
             end,
             color = function()
-              return { fg = "#b7bdf8", bg = "#24273a" }
+              return { fg = "#b4befe", bg = "#24273a" }
             end,
             separator = { left = "\u{e0b6}", right = "\u{e0b4}" },
             padding = { left = 0, right = 2 },
@@ -183,12 +184,12 @@ return {
             padding = { left = 0, right = 0 },
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
-                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
-                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
-                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
-                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
-                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
+                v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
+                V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
+                c = { fg = "#f9e2af", bg = "#313244" }, -- Command
+                R = { fg = "#f38ba8", bg = "#313244" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
@@ -198,12 +199,12 @@ return {
             "location",
             color = function()
               local mode_colors = {
-                n = { fg = "#89b4fa", bg = "#363a4f" }, -- Normal
-                i = { fg = "#a6e3a1", bg = "#363a4f" }, -- Insert
-                v = { fg = "#f5bde6", bg = "#363a4f" }, -- Visual
-                V = { fg = "#c6a0f6", bg = "#363a4f" }, -- Visual Line
-                c = { fg = "#eed49f", bg = "#363a4f" }, -- Command
-                R = { fg = "#ed8796", bg = "#363a4f" }, -- Replace
+                n = { fg = "#89b4fa", bg = "#313244" }, -- Normal
+                i = { fg = "#a6e3a1", bg = "#313244" }, -- Insert
+                v = { fg = "#f5c2e7", bg = "#313244" }, -- Visual
+                V = { fg = "#cba6f7", bg = "#313244" }, -- Visual Line
+                c = { fg = "#f9e2af", bg = "#313244" }, -- Command
+                R = { fg = "#f38ba8", bg = "#313244" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
@@ -217,12 +218,12 @@ return {
             end,
             color = function()
               local mode_colors = {
-                n = { fg = "#363a4f", bg = "#89b4fa", gui = "bold" }, -- Normal
-                i = { fg = "#363a4f", bg = "#a6e3a1", gui = "bold" }, -- Insert
-                v = { fg = "#363a4f", bg = "#f5bde6", gui = "bold" }, -- Visual
-                V = { fg = "#363a4f", bg = "#c6a0f6", gui = "bold" }, -- Visual Line
-                c = { fg = "#363a4f", bg = "#eed49f", gui = "bold" }, -- Command
-                R = { fg = "#363a4f", bg = "#ed8796", gui = "bold" }, -- Replace
+                n = { fg = "#1e1e2e", bg = "#89b4fa", gui = "bold" }, -- Normal
+                i = { fg = "#1e1e2e", bg = "#a6e3a1", gui = "bold" }, -- Insert
+                v = { fg = "#1e1e2e", bg = "#f5c2e7", gui = "bold" }, -- Visual
+                V = { fg = "#1e1e2e", bg = "#cba6f7", gui = "bold" }, -- Visual Line
+                c = { fg = "#1e1e2e", bg = "#f9e2af", gui = "bold" }, -- Command
+                R = { fg = "#1e1e2e", bg = "#f38ba8", gui = "bold" }, -- Replace
               }
               return mode_colors[vim.fn.mode()] or mode_colors.n
             end,
