@@ -84,7 +84,7 @@ return {
         NeoTreeModified = { fg = colors.peach, style = { "bold" } },
         -- Git status colors
         NeoTreeGitAdded = { fg = colors.green },
-        NeoTreeGitModified = { fg = colors.yellow, style = { "bold" } },
+        NeoTreeGitModified = { fg = colors.peach, style = { "bold" } },
         NeoTreeGitDeleted = { fg = colors.red },
         NeoTreeGitUntracked = { fg = colors.flamingo },
         NeoTreeGitIgnored = { fg = colors.overlay0 },
