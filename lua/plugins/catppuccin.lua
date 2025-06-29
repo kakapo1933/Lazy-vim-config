@@ -37,7 +37,6 @@ return {
       integrations = {
         cmp = true,
         gitsigns = true,
-        neotree = true,
         treesitter = true,
         notify = true,
         mini = {
@@ -101,8 +100,8 @@ return {
           -- NeoTreeVertSplit = { fg = colors.surface0, bg = colors.base },
           NeoTreeFileSize = { fg = colors.overlay1 },
           -- Floating window borders
-          FloatBorder = { fg = colors.mauve, bg = colors.crust },
-          NormalFloat = { fg = colors.lavender, bg = colors.crust },
+          -- FloatBorder = { fg = colors.mauve, bg = colors.crust },
+          -- NormalFloat = { fg = colors.lavender, bg = colors.crust },
         }
       end,
     },
